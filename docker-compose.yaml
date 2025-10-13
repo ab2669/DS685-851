@@ -33,8 +33,9 @@ services:
       # Needed to define a TurtleBot model type (3 or 4)
       - TURTLEBOT_MODEL=${TURTLEBOT_MODEL:-3}
       # Allows graphical programs in the container.
-      - DISPLAY=${DISPLAY}
+      - DISPLAY=:1
       - QT_X11_NO_MITSHM=1
+      - VNC_RESOLUTION=1920x1080
       - NVIDIA_DRIVER_CAPABILITIES=all
     volumes:
       # Allows graphical programs in the container.
@@ -83,6 +84,13 @@ services:
   demo-world:
     extends: overlay
     command: ros2 launch tb_worlds tb_demo_world.launch.py
+    ports:
+      - "6080:6080"  # noVNC web interface
+      - "5900:5900"  # VNC port
+    environment:
+      - DISPLAY=:1
+      - QT_X11_NO_MITSHM=1
+      - VNC_RESOLUTION=1920x1080
 
   # Behavior demo using Python and py_trees
   demo-behavior-py:

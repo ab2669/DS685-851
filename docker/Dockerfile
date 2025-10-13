@@ -92,11 +92,27 @@ ARG USERNAME=devuser
 ARG UID=1000
 ARG GID=${UID}
 
-# Install extra tools for development
 RUN apt-get update && apt-get install -y --no-install-recommends \
- gdb gdbserver nano
+ gdb gdbserver nano \
+ tigervnc-standalone-server \
+ tigervnc-common \
+ novnc \
+ websockify \
+ xfce4 \
+ xfce4-terminal \
+ supervisor && \
+ rm -rf /var/lib/apt/lists/*
 
-# In Ubuntu 24.04, there is already a user named "ubuntu" with UID 1000.
+# Create VNC xstartup script (no password for local dev)
+RUN mkdir -p ~/.vnc && \
+    printf '#!/bin/bash\nxrdb $HOME/.Xresources\nstartxfce4 &\n' > ~/.vnc/xstartup && \
+    chmod +x ~/.vnc/xstartup
+
+# Expose VNC ports
+EXPOSE 5900 6080
+
+# Start VNC and noVNC
+CMD ["sh", "-c", "vncserver :1 -SecurityTypes None -geometry 1920x1080 -depth 24 && websockify --web=/usr/share/novnc 6080 localhost:5901"]# In Ubuntu 24.04, there is already a user named "ubuntu" with UID 1000.
 # Delete this in the (common) event that the user on the host also has this UID.
 RUN touch /var/mail/ubuntu \
     && chown ubuntu /var/mail/ubuntu \

@@ -6,10 +6,10 @@ repositories:
     version: main
   
   # Foxglove Bridge for visualizing ROS 2 data in Foxglove Studio
-  foxglove_bridge:
-    type: git
-    url: https://github.com/foxglove/ros-foxglove-bridge.git
-    version: main
+  # foxglove_bridge:
+  #  type: git
+  #  url: https://github.com/foxglove/ros-foxglove-bridge.git
+  #  version: main
   
   # # py_trees and related packages for Python based behavior trees.
   # py_trees:
